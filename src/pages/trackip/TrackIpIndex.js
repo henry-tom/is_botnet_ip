@@ -8,10 +8,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Pagination from '@mui/material/Pagination';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Pagination from "@mui/material/Pagination";
 
 const { detect } = require("detect-browser");
 const { UAParser } = require("ua-parser-js");
@@ -94,10 +94,21 @@ export function TrackIpIndex() {
     fetchIps();
   }, [page]);
   async function fetchIps() {
+    const params = new URLSearchParams({
+      page: page,
+      pageSize: pageSize,
+      dateFrom: dateFrom?.toString()
+        ? new Date(dateFrom?.toString()).toLocaleDateString("vi-VN")
+        : null,
+      dateTo: dateTo?.toString()
+        ? new Date(dateTo?.toString()).toLocaleDateString("vi-VN")
+        : null,
+    });
+
     const response = await fetch(
-       `${process.env.REACT_APP_BACKEND_URL}/api/ips/all-pagination?page=${page}&pageSize=${pageSize}&dateFrom=${
-    dateFrom ? dateFrom.toLocaleDateString('en-CA') : null
-  }&dateTo=${dateTo ? dateTo.toLocaleDateString('en-CA') : null}`
+      `${
+        process.env.REACT_APP_BACKEND_URL
+      }/api/ips/all-pagination?${params.toString()}`
     );
     const { ips: json, count: countRes } = await response.json();
     console.log("Response info is: ", json);
@@ -123,7 +134,7 @@ export function TrackIpIndex() {
       return item;
     });
     setIps(tmp_rows);
-    setCount(countRes);
+    setCount(Math.floor(countRes / pageSize + 1));
   }
   async function mobileInfo() {
     return mobile() === true
@@ -163,10 +174,19 @@ export function TrackIpIndex() {
       <div>Browser: {browserName}</div>
       <span style={{ color: "blue" }}>HISTORY IP ACCESS THIS SERVER</span>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker value={dateFrom} onChange={(newValue) => setDateFrom(newValue)} />
-        <DatePicker value={dateTo} onChange={(newValue) => setDateTo(newValue)} />
+        <DatePicker
+          value={dateFrom}
+          onChange={(newValue) => setDateFrom(newValue)}
+        />
+        <DatePicker
+          value={dateTo}
+          onChange={(newValue) => setDateTo(newValue)}
+        />
       </LocalizationProvider>
-      <button onClick={fetchIps} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      <button
+        onClick={fetchIps}
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
         <i class="fas fa-search"></i> Search
       </button>
       <TableContainer component={Paper}>
