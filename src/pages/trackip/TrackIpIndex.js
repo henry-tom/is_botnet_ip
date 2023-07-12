@@ -8,6 +8,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Pagination from '@mui/material/Pagination';
 
 const { detect } = require("detect-browser");
 const { UAParser } = require("ua-parser-js");
@@ -45,6 +49,11 @@ export function TrackIpIndex() {
   const [ip, setIp] = useState("");
   const [os, setOs] = useState("");
   const [browserName, setBrowser] = useState("");
+  const [dateFrom, setDateFrom] = useState(null);
+  const [dateTo, setDateTo] = useState(null);
+  const [count, setCount] = useState(10);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(9);
   const { height, width } = useWindowDimensions();
   function createData(
     ID,
@@ -78,68 +87,72 @@ export function TrackIpIndex() {
     };
   }
   useEffect(() => {
-    async function fetchIps() {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/ips/all-backdoor`
-      );
-      const json = await response.json();
-      console.log("Response info is: ", json);
-      let tmp_rows = [];
-      await json.map((item, index) => {
-        tmp_rows.push(
-          createData(
-            index,
-            item.osName,
-            item.browserName,
-            JSON.stringify(item.mobileInfo),
-            item.ipValue,
-            item.city,
-            item.region,
-            item.country,
-            item.isp,
-            item.width,
-            item.height,
-            item.underTunnel,
-            item.createdAt
-          )
-        );
-        return item;
-      });
-      setIps(tmp_rows);
-    }
-    async function mobileInfo() {
-      return mobile() === true
-        ? resultDevice.device
-        : { typeDevice: "Transistor computer" };
-    }
-    async function create() {
-      if (browser) {
-        let deviceInfo = await mobileInfo();
-        setBrowser(browser.name);
-        setOs(browser.os);
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/api/ips/get-detail`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              nameOs: browser.os,
-              nameBrowser: browser.name,
-              screenWidth: width,
-              screenHeight: height,
-              mobileInfo: deviceInfo,
-            }),
-          }
-        );
-        const tmp = await response.json();
-        await setIp(tmp);
-      }
-    }
-    fetchIps();
     create();
   }, []);
+
+  useEffect(() => {
+    fetchIps();
+  }, [page]);
+  async function fetchIps() {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/api/ips/all-pagination?page=${page}&pageSize=${pageSize}&dateFrom=${dateFrom.toLocaleDateString('en-CA')}&dateTo=${dateTo.toLocaleDateString('en-CA')}`
+    );
+    const { ips: json, count: countRes } = await response.json();
+    console.log("Response info is: ", json);
+    let tmp_rows = [];
+    await json.map((item, index) => {
+      tmp_rows.push(
+        createData(
+          index,
+          item.osName,
+          item.browserName,
+          JSON.stringify(item.mobileInfo),
+          item.ipValue,
+          item.city,
+          item.region,
+          item.country,
+          item.isp,
+          item.width,
+          item.height,
+          item.underTunnel,
+          item.createdAt
+        )
+      );
+      return item;
+    });
+    setIps(tmp_rows);
+    setCount(countRes);
+  }
+  async function mobileInfo() {
+    return mobile() === true
+      ? resultDevice.device
+      : { typeDevice: "Transistor computer" };
+  }
+  async function create() {
+    if (browser) {
+      let deviceInfo = await mobileInfo();
+      setBrowser(browser.name);
+      setOs(browser.os);
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/ips/get-detail`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nameOs: browser.os,
+            nameBrowser: browser.name,
+            screenWidth: width,
+            screenHeight: height,
+            mobileInfo: deviceInfo,
+          }),
+        }
+      );
+      const tmp = await response.json();
+      await setIp(tmp);
+    }
+  }
 
   return (
     <div className="container mx-auto">
@@ -147,8 +160,15 @@ export function TrackIpIndex() {
       <div>OS: {os}</div>
       <div>Browser: {browserName}</div>
       <span style={{ color: "blue" }}>HISTORY IP ACCESS THIS SERVER</span>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker value={dateFrom} onChange={(newValue) => setDateFrom(newValue)} />
+        <DatePicker value={dateTo} onChange={(newValue) => setDateTo(newValue)} />
+      </LocalizationProvider>
+      <button onClick={fetchIps} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <i class="fas fa-search"></i> Search
+      </button>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+        <Table size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
@@ -192,6 +212,14 @@ export function TrackIpIndex() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        count={count}
+        variant="outlined"
+        page={page}
+        onChange={(event, value) => setPage(value)}
+        pageSize={pageSize}
+        onPageSizeChange={(event) => setPageSize(event.target.value)}
+      />
     </div>
   );
 }
