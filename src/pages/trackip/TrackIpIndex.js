@@ -52,6 +52,7 @@ export function TrackIpIndex() {
   const [dateFrom, setDateFrom] = useState(null);
   const [dateTo, setDateTo] = useState(null);
   const [count, setCount] = useState(10);
+  const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(9);
   const { height, width } = useWindowDimensions();
@@ -94,22 +95,22 @@ export function TrackIpIndex() {
     fetchIps();
   }, [page]);
   async function fetchIps() {
-    const params = new URLSearchParams({
-      page: page,
-      pageSize: pageSize,
-      dateFrom: dateFrom?.toString()
-        ? new Date(dateFrom?.toString()).toLocaleDateString("vi-VN")
-        : null,
-      dateTo: dateTo?.toString()
-        ? new Date(dateTo?.toString()).toLocaleDateString("vi-VN")
-        : null,
-    });
-
     const response = await fetch(
-      `${
-        process.env.REACT_APP_BACKEND_URL
-      }/api/ips/all-pagination?${params.toString()}`
+      `${process.env.REACT_APP_BACKEND_URL}/api/ips/all-pagination`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          page: page,
+          pageSize: pageSize,
+          dateFrom: dateFrom?.toString() ? new Date(dateFrom) : null,
+          dateTo: dateTo?.toString() ? new Date(dateTo) : null,
+        }),
+      }
     );
+
     const { ips: json, count: countRes } = await response.json();
     console.log("Response info is: ", json);
     let tmp_rows = [];
@@ -134,6 +135,7 @@ export function TrackIpIndex() {
       return item;
     });
     setIps(tmp_rows);
+    setTotalRows(countRes);
     setCount(Math.floor(countRes / pageSize + 1));
   }
   async function mobileInfo() {
@@ -174,22 +176,33 @@ export function TrackIpIndex() {
       <div>Browser: {browserName}</div>
       <span style={{ color: "blue" }}>HISTORY IP ACCESS THIS SERVER</span>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          value={dateFrom}
-          onChange={(newValue) => setDateFrom(newValue)}
-        />
-        <DatePicker
-          value={dateTo}
-          onChange={(newValue) => setDateTo(newValue)}
-        />
+        <span className="ml-2">
+          <DatePicker
+            value={dateFrom}
+            onChange={(newValue) => setDateFrom(newValue)}
+            sx={{ "& .MuiInputBase-input": { height: "8px" } }}
+          />
+        </span>
+        <span className="ml-2">
+          <DatePicker
+            value={dateTo}
+            onChange={(newValue) => setDateTo(newValue)}
+            sx={{
+              "& .MuiInputBase-input": { height: "8px", marginLeft: "2px" },
+            }}
+          />
+        </span>
       </LocalizationProvider>
       <button
         onClick={fetchIps}
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
       >
-        <i class="fas fa-search"></i> Search
+        <i className="fas fa-search"></i> Search
       </button>
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        sx={{ width: "100%", overflowX: "auto" }}
+      >
         <Table size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
@@ -242,6 +255,7 @@ export function TrackIpIndex() {
         pageSize={pageSize}
         onPageSizeChange={(event) => setPageSize(event.target.value)}
       />
+      <div>Total Rows: {totalRows}</div>
     </div>
   );
 }
