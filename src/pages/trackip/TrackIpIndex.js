@@ -97,7 +97,9 @@ export function TrackIpIndex() {
   const formattedDateTo = dateTo ? dateTo.toLocaleDateString('en-CA') : null;
   async function fetchIps() {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/api/ips/all-pagination?page=${page}&pageSize=${pageSize}&dateFrom=${formattedDateFrom}&dateTo=${formattedDateTo}`
+       `${process.env.REACT_APP_BACKEND_URL}/api/ips/all-pagination?page=${page}&pageSize=${pageSize}&dateFrom=${
+    dateFrom ? dateFrom.toLocaleDateString('en-CA') : null
+  }&dateTo=${dateTo ? dateTo.toLocaleDateString('en-CA') : null}`
     );
     const { ips: json, count: countRes } = await response.json();
     console.log("Response info is: ", json);
