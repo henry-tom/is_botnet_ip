@@ -93,8 +93,6 @@ export function TrackIpIndex() {
   useEffect(() => {
     fetchIps();
   }, [page]);
-  const formattedDateFrom = dateFrom ? dateFrom.toLocaleDateString('en-CA') : null;
-  const formattedDateTo = dateTo ? dateTo.toLocaleDateString('en-CA') : null;
   async function fetchIps() {
     const response = await fetch(
        `${process.env.REACT_APP_BACKEND_URL}/api/ips/all-pagination?page=${page}&pageSize=${pageSize}&dateFrom=${
