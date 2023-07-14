@@ -12,6 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Pagination from "@mui/material/Pagination";
+import { NotificationManager } from 'react-notifications';
 
 const { detect } = require("detect-browser");
 const { UAParser } = require("ua-parser-js");
@@ -40,6 +41,18 @@ export default function useWindowDimensions() {
 
   return windowDimensions;
 }
+
+const validateDates = (dateFrom, dateTo) => {
+  if (dateFrom && dateTo && dateFrom > dateTo) {
+    NotificationManager.error(
+      "The start date must be before the end date.",
+      "Date Validation"
+    );
+    return false;
+  }
+  return true;
+};
+
 
 export function TrackIpIndex() {
   var parser = new UAParser();
@@ -168,6 +181,11 @@ export function TrackIpIndex() {
       await setIp(tmp);
     }
   }
+  async function onSearch() {
+    if (validateDates(dateFrom, dateTo)) {
+      fetchIps();
+    }
+  }
 
   return (
     <div className="container mx-auto">
@@ -176,15 +194,19 @@ export function TrackIpIndex() {
       <div>Browser: {browserName}</div>
       <span style={{ color: "blue" }}>HISTORY IP ACCESS THIS SERVER</span>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <label htmlFor="dateFrom">From:</label>
         <span className="ml-2">
           <DatePicker
+            id="dateFrom"
             value={dateFrom}
             onChange={(newValue) => setDateFrom(newValue)}
             sx={{ "& .MuiInputBase-input": { height: "8px" } }}
           />
         </span>
+        <label htmlFor="dateTo">To:</label>
         <span className="ml-2">
           <DatePicker
+            id="dateTo"
             value={dateTo}
             onChange={(newValue) => setDateTo(newValue)}
             sx={{
@@ -193,8 +215,14 @@ export function TrackIpIndex() {
           />
         </span>
       </LocalizationProvider>
+      <button onClick={() => {
+        setDateFrom(null);
+        setDateTo(null);
+      }} class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2">
+        <i className="fas fa-times-circle"></i> Clear
+      </button>
       <button
-        onClick={fetchIps}
+        onClick={onSearch}
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
       >
         <i className="fas fa-search"></i> Search
