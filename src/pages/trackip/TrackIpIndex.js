@@ -12,7 +12,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Pagination from "@mui/material/Pagination";
-import { NotificationManager } from 'react-notifications';
+import { NotificationManager } from "react-notifications";
+import TextField from "@mui/material/TextField";
 
 const { detect } = require("detect-browser");
 const { UAParser } = require("ua-parser-js");
@@ -53,7 +54,6 @@ const validateDates = (dateFrom, dateTo) => {
   return true;
 };
 
-
 export function TrackIpIndex() {
   var parser = new UAParser();
   let resultDevice = parser.getResult();
@@ -68,6 +68,7 @@ export function TrackIpIndex() {
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(9);
+  const [ipValue, setIpValue] = useState(null);
   const { height, width } = useWindowDimensions();
   function createData(
     ID,
@@ -117,6 +118,7 @@ export function TrackIpIndex() {
         },
         body: JSON.stringify({
           page: page,
+          ipValue: ipValue,
           pageSize: pageSize,
           dateFrom: dateFrom?.toString() ? new Date(dateFrom) : null,
           dateTo: dateTo?.toString() ? new Date(dateTo) : null,
@@ -193,12 +195,24 @@ export function TrackIpIndex() {
       <div>OS: {os}</div>
       <div>Browser: {browserName}</div>
       <span style={{ color: "blue" }}>HISTORY IP ACCESS THIS SERVER</span>
+      <span className="ml-2">
+        <TextField
+          id="outlined-basic"
+          label="IP value"
+          variant="outlined"
+          value={ipValue}
+          onChange={(event) => setIpValue(event.target.value)}
+          inputProps={{ style: { height: "8px" } }}
+          size="normal"
+        />
+      </span>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <label htmlFor="dateFrom">From:</label>
         <span className="ml-2">
           <DatePicker
             id="dateFrom"
             value={dateFrom}
+            variant="outlined"
             onChange={(newValue) => setDateFrom(newValue)}
             sx={{ "& .MuiInputBase-input": { height: "8px" } }}
           />
@@ -208,6 +222,7 @@ export function TrackIpIndex() {
           <DatePicker
             id="dateTo"
             value={dateTo}
+            variant="outlined"
             onChange={(newValue) => setDateTo(newValue)}
             sx={{
               "& .MuiInputBase-input": { height: "8px", marginLeft: "2px" },
@@ -215,10 +230,14 @@ export function TrackIpIndex() {
           />
         </span>
       </LocalizationProvider>
-      <button onClick={() => {
-        setDateFrom(null);
-        setDateTo(null);
-      }} class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2">
+      <button
+        onClick={() => {
+          setDateFrom(null);
+          setDateTo(null);
+          setIpValue("");
+        }}
+        class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2"
+      >
         <i className="fas fa-times-circle"></i> Clear
       </button>
       <button
