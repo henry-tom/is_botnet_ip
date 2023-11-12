@@ -195,114 +195,120 @@ export function TrackIpIndex() {
       <div>OS: {os}</div>
       <div>Browser: {browserName}</div>
       <span style={{ color: "blue" }}>HISTORY IP ACCESS THIS SERVER</span>
-      <span className="ml-2">
-        <TextField
-          id="outlined-basic"
-          label="IP value"
-          variant="outlined"
-          value={ipValue}
-          onChange={(event) => setIpValue(event.target.value)}
-          inputProps={{ style: { height: "8px" } }}
-          size="normal"
-        />
-      </span>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <label htmlFor="dateFrom">From:</label>
+      <div style={{ marginTop: "12px" }}>
         <span className="ml-2">
-          <DatePicker
-            id="dateFrom"
-            value={dateFrom}
+          <TextField
+            id="outlined-basic"
+            label="IP value"
             variant="outlined"
-            onChange={(newValue) => setDateFrom(newValue)}
-            sx={{ "& .MuiInputBase-input": { height: "8px" } }}
+            value={ipValue}
+            onChange={(event) => setIpValue(event.target.value)}
+            inputProps={{ style: { height: "8px" } }}
+            size="normal"
           />
         </span>
-        <label htmlFor="dateTo">To:</label>
-        <span className="ml-2">
-          <DatePicker
-            id="dateTo"
-            value={dateTo}
-            variant="outlined"
-            onChange={(newValue) => setDateTo(newValue)}
-            sx={{
-              "& .MuiInputBase-input": { height: "8px", marginLeft: "2px" },
-            }}
-          />
-        </span>
-      </LocalizationProvider>
-      <button
-        onClick={() => {
-          setDateFrom(null);
-          setDateTo(null);
-          setIpValue("");
-        }}
-        class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2"
-      >
-        <i className="fas fa-times-circle"></i> Clear
-      </button>
-      <button
-        onClick={onSearch}
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-      >
-        <i className="fas fa-search"></i> Search
-      </button>
-      <TableContainer
-        component={Paper}
-        sx={{ width: "100%", overflowX: "auto" }}
-      >
-        <Table size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Operation</TableCell>
-              <TableCell>Browser</TableCell>
-              <TableCell>Type device</TableCell>
-              <TableCell>IP Value</TableCell>
-              <TableCell>City</TableCell>
-              <TableCell>Region</TableCell>
-              <TableCell>Country</TableCell>
-              <TableCell>ISP</TableCell>
-              <TableCell>Width</TableCell>
-              <TableCell>Height</TableCell>
-              <TableCell>Under tunnel</TableCell>
-              <TableCell>Time</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {ips.map((row) => (
-              <TableRow
-                key={row.ID}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {row.ID}
-                </TableCell>
-                <TableCell>{row.Browser}</TableCell>
-                <TableCell>{row.Operation}</TableCell>
-                <TableCell>{row.IPValue}</TableCell>
-                <TableCell>{row.TypeDevice}</TableCell>
-                <TableCell>{row.City}</TableCell>
-                <TableCell>{row.Region}</TableCell>
-                <TableCell>{row.Country}</TableCell>
-                <TableCell>{row.ISP}</TableCell>
-                <TableCell>{row.Width}</TableCell>
-                <TableCell>{row.Height}</TableCell>
-                <TableCell>{row.UnderTunnel}</TableCell>
-                <TableCell>{row.Time}</TableCell>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <label htmlFor="dateFrom">From:</label>
+          <span className="ml-2">
+            <DatePicker
+              id="dateFrom"
+              value={dateFrom}
+              variant="outlined"
+              onChange={(newValue) => setDateFrom(newValue)}
+              sx={{ "& .MuiInputBase-input": { height: "8px" } }}
+            />
+          </span>
+          <label htmlFor="dateTo">To:</label>
+          <span className="ml-2">
+            <DatePicker
+              id="dateTo"
+              value={dateTo}
+              variant="outlined"
+              onChange={(newValue) => setDateTo(newValue)}
+              sx={{
+                "& .MuiInputBase-input": { height: "8px", marginLeft: "2px" },
+              }}
+            />
+          </span>
+        </LocalizationProvider>
+        <button
+          onClick={() => {
+            setDateFrom(null);
+            setDateTo(null);
+            setIpValue("");
+          }}
+          class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
+          <i className="fas fa-times-circle"></i> Clear
+        </button>
+        <button
+          onClick={onSearch}
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
+          <i className="fas fa-search"></i> Search
+        </button>
+      </div>
+      <div style={{ marginTop: "12px" }}>
+        <TableContainer
+          component={Paper}
+          sx={{ width: "100%", overflowX: "auto" }}
+        >
+          <Table size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Operation</TableCell>
+                <TableCell>Browser</TableCell>
+                <TableCell>Type device</TableCell>
+                <TableCell>IP Value</TableCell>
+                <TableCell>City</TableCell>
+                <TableCell>Region</TableCell>
+                <TableCell>Country</TableCell>
+                <TableCell>ISP</TableCell>
+                <TableCell>Width</TableCell>
+                <TableCell>Height</TableCell>
+                <TableCell>Under tunnel</TableCell>
+                <TableCell>Time</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Pagination
-        count={count}
-        variant="outlined"
-        page={page}
-        onChange={(event, value) => setPage(value)}
-        pageSize={pageSize}
-        onPageSizeChange={(event) => setPageSize(event.target.value)}
-      />
-      <div>Total Rows: {totalRows}</div>
+            </TableHead>
+            <TableBody>
+              {ips.map((row) => (
+                <TableRow
+                  key={row.ID}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.ID}
+                  </TableCell>
+                  <TableCell>{row.Browser}</TableCell>
+                  <TableCell>{row.Operation}</TableCell>
+                  <TableCell>{row.IPValue}</TableCell>
+                  <TableCell>{row.TypeDevice}</TableCell>
+                  <TableCell>{row.City}</TableCell>
+                  <TableCell>{row.Region}</TableCell>
+                  <TableCell>{row.Country}</TableCell>
+                  <TableCell>{row.ISP}</TableCell>
+                  <TableCell>{row.Width}</TableCell>
+                  <TableCell>{row.Height}</TableCell>
+                  <TableCell>{row.UnderTunnel}</TableCell>
+                  <TableCell>{row.Time}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      <div style={{ marginTop: "12px" }}>
+        <Pagination
+          count={count}
+          variant="outlined"
+          page={page}
+          onChange={(event, value) => setPage(value)}
+          pageSize={pageSize}
+          onPageSizeChange={(event) => setPageSize(event.target.value)}
+        />
+      </div>
+      <div style={{ marginTop: "12px" }}>Total Rows: {totalRows}</div>
     </div>
   );
 }
