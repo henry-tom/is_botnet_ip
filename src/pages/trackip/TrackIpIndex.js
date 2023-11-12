@@ -195,7 +195,7 @@ export function TrackIpIndex() {
       <div>OS: {os}</div>
       <div>Browser: {browserName}</div>
       <span style={{ color: "blue" }}>HISTORY IP ACCESS THIS SERVER</span>
-      <div style={{ marginTop: "12px" }}>
+      <div className="ml-2" style={{ marginTop: "12px" }}>
         <span className="ml-2">
           <TextField
             id="outlined-basic"
@@ -208,7 +208,7 @@ export function TrackIpIndex() {
           />
         </span>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <label htmlFor="dateFrom">From:</label>
+          <label className="ml-2" htmlFor="dateFrom">From:</label>
           <span className="ml-2">
             <DatePicker
               id="dateFrom"
@@ -218,7 +218,7 @@ export function TrackIpIndex() {
               sx={{ "& .MuiInputBase-input": { height: "8px" } }}
             />
           </span>
-          <label htmlFor="dateTo">To:</label>
+          <label className="ml-2" htmlFor="dateTo">To:</label>
           <span className="ml-2">
             <DatePicker
               id="dateTo"
