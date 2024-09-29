@@ -1,9 +1,7 @@
 This project was to experiment react js,
-i try to create something can bring joy for everyone  
+I try to create something can bring joy for everyone  
 
-https://ml-tom-ip.netlify.app
-
-Free IP data access our server:   
-https://ml-tom-ip.netlify.app/ips  
-
-comming soon ip data public project   
+Free IP data access our server: 
+You can check is an ip is ip from botnet on internet space ?
+https://check-bot-ip.netlify.app/
+Comming soon ip v4 data public project   
