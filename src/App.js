@@ -18,7 +18,7 @@ function App() {
   const role = useSelector(selectRole);
   return (
     <Routes>
-      <Route path="/" element={<VideoIndex />} />
+      <Route path="/" element={<TrackIpIndex />} />
       <Route path="/redux" element={<Counter />} />
       <Route path="/hook-test" element={<Hooktest />} />
       <Route path="/videos/:videoId" element={<VideoShow />} />
