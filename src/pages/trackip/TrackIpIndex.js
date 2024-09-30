@@ -185,6 +185,7 @@ export function TrackIpIndex() {
   }
   async function onSearch() {
     if (validateDates(dateFrom, dateTo)) {
+      setPage(1);
       fetchIps();
     }
   }
