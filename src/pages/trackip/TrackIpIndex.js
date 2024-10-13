@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,19 +8,19 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Pagination from "@mui/material/Pagination";
-import {NotificationManager} from "react-notifications";
+import { NotificationManager } from "react-notifications";
 import TextField from "@mui/material/TextField";
 
-const {detect} = require("detect-browser");
-const {UAParser} = require("ua-parser-js");
+const { detect } = require("detect-browser");
+const { UAParser } = require("ua-parser-js");
 var mobile = require("is-mobile");
 
 function getWindowDimensions() {
-    const {innerWidth: width, innerHeight: height} = window;
+    const { innerWidth: width, innerHeight: height } = window;
     return {
         width,
         height,
@@ -70,7 +70,7 @@ export function TrackIpIndex() {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(9);
     const [ipValue, setIpValue] = useState(null);
-    const {height, width} = useWindowDimensions();
+    const { height, width } = useWindowDimensions();
 
     function createData(
         ID,
@@ -130,7 +130,7 @@ export function TrackIpIndex() {
             }
         );
 
-        const {ips: json, count: countRes} = await response.json();
+        const { ips: json, count: countRes } = await response.json();
         console.log("Response info is: ", json);
         let tmp_rows = [];
         await json.map((item, index) => {
@@ -161,7 +161,7 @@ export function TrackIpIndex() {
     async function mobileInfo() {
         return mobile() === true
             ? resultDevice.device
-            : {typeDevice: "Transistor computer"};
+            : { typeDevice: "Transistor computer" };
     }
 
     async function create() {
@@ -197,54 +197,64 @@ export function TrackIpIndex() {
         }
     }
 
+    function keyDown(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            onSearch()
+        }
+    }
+
     return (
         <div className="container mx-auto">
             <img
-                style={{display: "inline-block"}}
+                style={{ display: "inline-block" }}
                 src='/android-chrome-512x512.png'
                 alt='null'
                 width='3%'
                 height='auto'
             ></img>
-            <div style={{color: "red", fontSize: "30px"}}>Your IP: {ip}</div>
+            <div style={{ color: "red", fontSize: "30px" }}>Your IP: {ip}</div>
             <div>OS: {os}</div>
             <div>Browser: {browserName}</div>
-            <span style={{color: "blue"}}>HISTORY IP ACCESS THIS SERVER</span>
-            <div className="ml-2" style={{marginTop: "12px"}}>
-        <span className="ml-2">
-          <TextField
-              id="outlined-basic"
-              label="IP value"
-              variant="outlined"
-              value={ipValue}
-              onChange={(event) => setIpValue(event.target.value)}
-              inputProps={{style: {height: "8px"}}}
-              size="normal"
-          />
-        </span>
+            <span style={{ color: "blue" }}>HISTORY IP ACCESS THIS SERVER</span>
+            <div className="ml-2" style={{ marginTop: "12px" }}>
+                <span className="ml-2">
+                    <TextField
+                        id="outlined-basic"
+                        label="IP value"
+                        variant="outlined"
+                        value={ipValue}
+                        onChange={(event) => setIpValue(event.target.value)}
+                        onKeyDown={(event) => keyDown(event)}
+                        inputProps={{ style: { height: "8px" } }}
+                        size="normal"
+                    />
+                </span>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <label className="ml-2" htmlFor="dateFrom">From:</label>
                     <span className="ml-2">
-            <DatePicker
-                id="dateFrom"
-                value={dateFrom}
-                variant="outlined"
-                onChange={(newValue) => setDateFrom(newValue)}
-                sx={{"& .MuiInputBase-input": {height: "8px"}}}
-            />
-          </span>
+                        <DatePicker
+                            id="dateFrom"
+                            value={dateFrom}
+                            variant="outlined"
+                            onChange={(newValue) => setDateFrom(newValue)}
+                            onKeyDown={(event) => keyDown(event)}
+                            sx={{ "& .MuiInputBase-input": { height: "8px" } }}
+                        />
+                    </span>
                     <label className="ml-2" htmlFor="dateTo">To:</label>
                     <span className="ml-2">
-            <DatePicker
-                id="dateTo"
-                value={dateTo}
-                variant="outlined"
-                onChange={(newValue) => setDateTo(newValue)}
-                sx={{
-                    "& .MuiInputBase-input": {height: "8px", marginLeft: "2px"},
-                }}
-            />
-          </span>
+                        <DatePicker
+                            id="dateTo"
+                            value={dateTo}
+                            onKeyDown={(event) => keyDown(event)}
+                            variant="outlined"
+                            onChange={(newValue) => setDateTo(newValue)}
+                            sx={{
+                                "& .MuiInputBase-input": { height: "8px", marginLeft: "2px" },
+                            }}
+                        />
+                    </span>
                 </LocalizationProvider>
                 <button
                     onClick={() => {
@@ -263,10 +273,10 @@ export function TrackIpIndex() {
                     <i className="fas fa-search"></i> Search
                 </button>
             </div>
-            <div style={{marginTop: "12px"}}>
+            <div style={{ marginTop: "12px" }}>
                 <TableContainer
                     component={Paper}
-                    sx={{width: "100%", overflowX: "auto"}}
+                    sx={{ width: "100%", overflowX: "auto" }}
                 >
                     <Table size="small" aria-label="a dense table">
                         <TableHead>
@@ -290,7 +300,7 @@ export function TrackIpIndex() {
                             {ips.map((row) => (
                                 <TableRow
                                     key={row.ID}
-                                    sx={{"&:last-child td, &:last-child th": {border: 0}}}
+                                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                                 >
                                     <TableCell component="th" scope="row">
                                         {row.ID}
@@ -313,7 +323,7 @@ export function TrackIpIndex() {
                     </Table>
                 </TableContainer>
             </div>
-            <div style={{marginTop: "12px"}}>
+            <div style={{ marginTop: "12px" }}>
                 <Pagination
                     count={count}
                     variant="outlined"
@@ -323,7 +333,7 @@ export function TrackIpIndex() {
                     onPageSizeChange={(event) => setPageSize(event.target.value)}
                 />
             </div>
-            <div style={{marginTop: "12px"}}>Total Rows: {totalRows}</div>
+            <div style={{ marginTop: "12px" }}>Total Rows: {totalRows}</div>
         </div>
     );
 }
