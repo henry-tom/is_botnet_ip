@@ -148,7 +148,7 @@ export function Login() {
             </li>
             {/* <li><button>+</button></li> */}
           </ol>
-          <small>Facebook © 2022</small>
+          <small>Henry tom © 2022</small>
         </div>
       </footer>
     </div>
