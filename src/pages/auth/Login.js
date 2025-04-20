@@ -40,15 +40,15 @@ export function Login() {
     <div>
       <main>
         <div className={styles.row}>
-          // <div className={styles.colm_logo}>
-          //   <img
-          //     src='https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg'
-          //     alt='Logo'
-          //   />
-          //   <h2>
-          //     Facebook helps you connect and share with the people in your life.
-          //   </h2>
-          // </div>
+          {/* <div className={styles.colm_logo}>
+            <img
+              src='https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg'
+              alt='Logo'
+            />
+            <h2>
+              Facebook helps you connect and share with the people in your life.
+            </h2>
+          </div> */}
           <div className={styles.colm_form}>
             <form className={styles.form_container}>
               <input
